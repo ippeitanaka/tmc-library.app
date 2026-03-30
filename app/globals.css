@@ -1,0 +1,221 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* MiraCosta Ivory background */
+  --background: oklch(0.965 0.012 80);
+  --foreground: oklch(0.22 0.04 50);
+  /* Parchment white cards */
+  --card: oklch(0.99 0.006 75);
+  --card-foreground: oklch(0.22 0.04 50);
+  --popover: oklch(0.99 0.006 75);
+  --popover-foreground: oklch(0.22 0.04 50);
+  /* Deep Venetian brown primary */
+  --primary: oklch(0.35 0.09 45);
+  --primary-foreground: oklch(0.96 0.015 75);
+  /* Warm sand secondary */
+  --secondary: oklch(0.9 0.03 70);
+  --secondary-foreground: oklch(0.35 0.08 45);
+  /* Muted parchment */
+  --muted: oklch(0.93 0.015 75);
+  --muted-foreground: oklch(0.48 0.04 50);
+  /* Antique gold accent */
+  --accent: oklch(0.68 0.13 75);
+  --accent-foreground: oklch(0.22 0.04 50);
+  /* Destructive terracotta */
+  --destructive: oklch(0.5 0.2 30);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.86 0.025 70);
+  --input: oklch(0.94 0.012 78);
+  --ring: oklch(0.5 0.1 55);
+  --chart-1: oklch(0.35 0.09 45);
+  --chart-2: oklch(0.68 0.13 75);
+  --chart-3: oklch(0.5 0.12 35);
+  --chart-4: oklch(0.45 0.08 50);
+  --chart-5: oklch(0.6 0.1 65);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.28 0.06 45);
+  --sidebar-foreground: oklch(0.96 0.015 75);
+  --sidebar-primary: oklch(0.68 0.13 75);
+  --sidebar-primary-foreground: oklch(0.22 0.04 50);
+  --sidebar-accent: oklch(0.38 0.07 45);
+  --sidebar-accent-foreground: oklch(0.96 0.015 75);
+  --sidebar-border: oklch(0.35 0.06 45);
+  --sidebar-ring: oklch(0.68 0.13 75);
+  /* Status */
+  --open: oklch(0.5 0.14 155);
+  --open-foreground: oklch(0.98 0 0);
+  --closed: oklch(0.5 0.18 30);
+  --closed-foreground: oklch(0.98 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --font-sans: 'Noto Sans JP', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* MiraCosta header - warm brown with subtle ornamental pattern */
+.miracosta-header {
+  background: linear-gradient(180deg, #5a3e2b 0%, #4a3222 40%, #3d2817 100%);
+  position: relative;
+  border-bottom: 2px solid #c9a227;
+  box-shadow: 0 4px 20px rgba(61, 40, 23, 0.4);
+}
+
+.miracosta-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a227' fill-opacity='0.06'%3E%3Cpath d='M20 0L40 20L20 40L0 20z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.miracosta-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* MiraCosta gold action button */
+.btn-miracosta {
+  background: linear-gradient(145deg, #c9a227 0%, #b8942a 50%, #a68628 100%);
+  color: #3d2817;
+  font-weight: 700;
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  box-shadow:
+    0 3px 10px rgba(168, 134, 40, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-miracosta:hover {
+  background: linear-gradient(145deg, #d4b033 0%, #c9a227 50%, #b8942a 100%);
+  box-shadow:
+    0 5px 14px rgba(168, 134, 40, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-miracosta:active {
+  transform: translateY(0);
+}
+
+/* Gold divider line */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #c9a227 25%, #c9a227 75%, transparent 100%);
+}
+
+/* Subtle background pattern */
+.miracosta-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235a3e2b' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Logo circle - clean, no effects, no background */
+.logo-circle {
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    0 4px 16px rgba(61, 40, 23, 0.3),
+    0 0 0 3px #c9a227,
+    0 0 0 6px rgba(61, 40, 23, 0.12);
+  background: transparent;
+}
+
+.logo-circle img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Elegant card style */
+.miracosta-card {
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,252,245,1) 100%);
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  box-shadow:
+    0 4px 24px rgba(61, 40, 23, 0.07),
+    0 1px 3px rgba(61, 40, 23, 0.05);
+}
