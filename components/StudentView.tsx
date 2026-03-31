@@ -35,9 +35,9 @@ export default function StudentView() {
   const overdueLoans = myLoans.filter((l) => checkOverdue(l.dueDate));
   const today = todayString();
 
-  const handleRequestExtension = (loanId: string) => {
+  const handleRequestExtension = async (loanId: string) => {
     if (!studentId) return;
-    const ok = requestExtension(loanId, studentId);
+    const ok = await requestExtension(loanId, studentId);
     setExtensionResult(ok ? 'success' : 'fail');
     setExtensionLoanId(null);
   };
@@ -336,7 +336,7 @@ export default function StudentView() {
           })()}
           <DialogFooter className="flex-row gap-2">
             <Button variant="outline" className="flex-1" onClick={() => setExtensionLoanId(null)}>キャンセル</Button>
-            <Button className="flex-1" onClick={() => extensionLoanId && handleRequestExtension(extensionLoanId)}>申請する</Button>
+            <Button className="flex-1" onClick={() => extensionLoanId && void handleRequestExtension(extensionLoanId)}>申請する</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

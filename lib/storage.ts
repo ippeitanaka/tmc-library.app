@@ -120,7 +120,7 @@ function generateSeedData(): AppData {
     },
   ];
 
-  return { schedules, announcements, loans, adminAcademicYear: currentYear };
+  return { schedules, announcements, loans, students: [], adminAcademicYear: currentYear };
 }
 
 export function loadData(): AppData {

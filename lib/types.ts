@@ -14,6 +14,7 @@ export interface LibrarySchedule {
   openTime: string; // HH:MM
   closeTime: string; // HH:MM
   note?: string;
+  academicYear?: AcademicYear;
 }
 
 export interface Announcement {
@@ -23,6 +24,7 @@ export interface Announcement {
   createdAt: string; // ISO string
   isPinned: boolean;
   academicYear: AcademicYear;
+  category?: string;
 }
 
 export interface ExtensionRequest {

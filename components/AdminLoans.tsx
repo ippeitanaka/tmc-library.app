@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppContext } from '@/contexts/AppContext';
 import { todayString, addDays, toDateString, checkOverdue } from '@/lib/date-utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import {
   BookOpen,
   Plus,
@@ -30,12 +29,13 @@ import type { LoanRecord } from '@/lib/types';
 type Filter = 'active' | 'overdue' | 'extension' | 'returned' | 'all';
 
 export default function AdminLoans() {
-  const { data, addLoan, returnLoan, processExtension } = useAppContext();
+  const { data, addLoan, returnLoan, processExtension, getStudentByStudentId } = useAppContext();
   const [filter, setFilter] = useState<Filter>('active');
   const [search, setSearch] = useState('');
   const [addDialog, setAddDialog] = useState(false);
   const [processDialog, setProcessDialog] = useState<LoanRecord | null>(null);
   const [adminNote, setAdminNote] = useState('');
+  const [loanFormError, setLoanFormError] = useState('');
   const [form, setForm] = useState({
     bookTitle: '',
     bookAuthor: '',
@@ -44,6 +44,22 @@ export default function AdminLoans() {
   });
 
   const today = todayString();
+  const matchedStudent = getStudentByStudentId(form.studentId.trim());
+
+  useEffect(() => {
+    if (!form.studentId.trim()) {
+      setForm((prev) => (prev.studentName ? { ...prev, studentName: '' } : prev));
+      return;
+    }
+
+    if (matchedStudent && form.studentName !== matchedStudent.name) {
+      setForm((prev) => ({ ...prev, studentName: matchedStudent.name }));
+    }
+
+    if (!matchedStudent && form.studentName) {
+      setForm((prev) => ({ ...prev, studentName: '' }));
+    }
+  }, [matchedStudent, form.studentId, form.studentName]);
 
   const loans = data.loans.filter((l) => {
     const q = search.toLowerCase();
@@ -72,20 +88,30 @@ export default function AdminLoans() {
     (l) => !l.returnDate && !checkOverdue(l.dueDate)
   ).length;
 
-  const handleAddLoan = () => {
-    if (!form.bookTitle.trim() || !form.studentId.trim() || !form.studentName.trim()) return;
+  const resetLoanForm = () => {
+    setLoanFormError('');
+    setForm({ bookTitle: '', bookAuthor: '', studentId: '', studentName: '' });
+  };
+
+  const handleAddLoan = async () => {
+    if (!form.bookTitle.trim() || !form.studentId.trim()) return;
+    if (!matchedStudent) {
+      setLoanFormError('学籍番号に一致する学生が登録されていません');
+      return;
+    }
+
     const loanDate = today;
     const dueDate = toDateString(addDays(new Date(), 14));
-    addLoan({
+    await addLoan({
       bookTitle: form.bookTitle.trim(),
       bookAuthor: form.bookAuthor.trim(),
-      studentId: form.studentId.trim(),
-      studentName: form.studentName.trim(),
+      studentId: matchedStudent.studentId,
+      studentName: matchedStudent.name,
       loanDate,
       dueDate,
       academicYear: data.adminAcademicYear,
     });
-    setForm({ bookTitle: '', bookAuthor: '', studentId: '', studentName: '' });
+    resetLoanForm();
     setAddDialog(false);
   };
 
@@ -101,7 +127,7 @@ export default function AdminLoans() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-bold">貸出管理</h2>
-        <Button onClick={() => setAddDialog(true)} className="gap-2 rounded-xl">
+        <Button onClick={() => { resetLoanForm(); setAddDialog(true); }} className="gap-2 rounded-xl">
           <Plus className="w-4 h-4" />
           貸出登録
         </Button>
@@ -266,7 +292,10 @@ export default function AdminLoans() {
       )}
 
       {/* Add loan dialog */}
-      <Dialog open={addDialog} onOpenChange={setAddDialog}>
+      <Dialog open={addDialog} onOpenChange={(open) => {
+        setAddDialog(open);
+        if (!open) resetLoanForm();
+      }}>
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -277,7 +306,7 @@ export default function AdminLoans() {
           <div className="flex flex-col gap-4 py-2">
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">書名 *</label>
-              <Input value={form.bookTitle} onChange={e => setForm(f => ({ ...f, bookTitle: e.target.value }))} placeholder="例: 東洋医学概論" className="h-10" />
+              <Input value={form.bookTitle} onChange={e => { setForm(f => ({ ...f, bookTitle: e.target.value })); setLoanFormError(''); }} placeholder="例: 東洋医学概論" className="h-10" />
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">著者（任意）</label>
@@ -286,21 +315,56 @@ export default function AdminLoans() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-medium text-muted-foreground mb-1 block">学籍番号 *</label>
-                <Input value={form.studentId} onChange={e => setForm(f => ({ ...f, studentId: e.target.value }))} placeholder="2024001" className="h-10" />
+                <Input
+                  value={form.studentId}
+                  onChange={e => {
+                    setForm(f => ({ ...f, studentId: e.target.value }));
+                    setLoanFormError('');
+                  }}
+                  placeholder="2024001"
+                  className="h-10"
+                />
               </div>
               <div>
                 <label className="text-xs font-medium text-muted-foreground mb-1 block">氏名 *</label>
-                <Input value={form.studentName} onChange={e => setForm(f => ({ ...f, studentName: e.target.value }))} placeholder="山田 太郎" className="h-10" />
+                <Input
+                  value={form.studentName}
+                  placeholder="学籍番号から自動反映"
+                  className="h-10"
+                  readOnly
+                  disabled
+                />
               </div>
             </div>
+            {matchedStudent && (
+              <div className="rounded-xl border border-primary/20 bg-primary/5 px-3 py-2 text-sm text-primary">
+                学生確認: {matchedStudent.department} / {matchedStudent.name}
+              </div>
+            )}
+            {!matchedStudent && form.studentId.trim() && (
+              <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                学籍番号に一致する学生情報が見つかりません
+              </div>
+            )}
+            {loanFormError && (
+              <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {loanFormError}
+              </div>
+            )}
             <div className="bg-secondary/50 rounded-xl px-3 py-2 flex items-center gap-2 text-sm">
               <Clock className="w-4 h-4 text-primary" />
               <span>貸出日: <strong>{today}</strong>　返却期限: <strong>{toDateString(addDays(new Date(), 14))}</strong></span>
             </div>
           </div>
           <DialogFooter className="flex-row gap-2">
-            <Button variant="outline" className="flex-1" onClick={() => setAddDialog(false)}>キャンセル</Button>
-            <Button className="flex-1" onClick={handleAddLoan} disabled={!form.bookTitle.trim() || !form.studentId.trim() || !form.studentName.trim()}>登録</Button>
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => {
+                setAddDialog(false);
+              }}
+            >キャンセル</Button>
+            <Button className="flex-1" onClick={() => void handleAddLoan()} disabled={!form.bookTitle.trim() || !form.studentId.trim() || !matchedStudent}>登録</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
