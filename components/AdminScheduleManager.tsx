@@ -188,6 +188,11 @@ export default function AdminScheduleManager() {
                       {schedule.openTime && (
                         <span className="text-[8px] text-muted-foreground text-center leading-tight">{schedule.openTime}–{schedule.closeTime}</span>
                       )}
+                      {schedule.note && (
+                        <span className="text-[8px] text-amber-700 text-center leading-tight truncate" title={schedule.note}>
+                          担当: {schedule.note}
+                        </span>
+                      )}
                     </div>
                   ) : (
                     <span className="text-[9px] bg-red-100 text-red-600 font-bold rounded px-1 py-0.5 text-center">休館</span>

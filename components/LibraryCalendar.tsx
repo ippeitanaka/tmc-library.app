@@ -130,22 +130,12 @@ export default function LibraryCalendar() {
                         {schedule.openTime}–{schedule.closeTime}
                       </span>
                     )}
-                    {schedule.note && (
-                      <span className="text-[8px] text-amber-600 text-center leading-tight truncate">
-                        {schedule.note}
-                      </span>
-                    )}
                   </div>
                 ) : (
                   <div className="flex flex-col gap-0.5">
                     <span className="bg-[oklch(0.58_0.22_27)] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md text-center leading-tight">
                       休館
                     </span>
-                    {schedule.note && (
-                      <span className="text-[8px] text-muted-foreground text-center leading-tight truncate">
-                        {schedule.note}
-                      </span>
-                    )}
                   </div>
                 )
               ) : (
